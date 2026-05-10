@@ -1,5 +1,6 @@
 import fs from 'fs'
 import path from 'path'
+import crypto from 'crypto'
 
 const DATA_FILE = path.join(process.cwd(), 'data', 'alerts.json')
 
@@ -20,6 +21,13 @@ export function writeAlerts(alerts: any[]) {
   fs.writeFileSync(DATA_FILE, JSON.stringify(alerts, null, 2))
 }
 
+// Simulate blockchain transaction
+export function generateBlockchainTransaction(alertData: any): string {
+  const hash = crypto.createHash('sha256')
+  hash.update(JSON.stringify(alertData) + Date.now())
+  return '0x' + hash.digest('hex').slice(0, 40)
+}
+
 export async function findNearestHospitals(lat: number, lng: number) {
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
   if (apiKey) {
@@ -32,16 +40,16 @@ export async function findNearestHospitals(lat: number, lng: number) {
           name:     place.name,
           address:  place.vicinity || 'Address not available',
           distance: `${haversine(lat, lng, place.geometry?.location?.lat, place.geometry?.location?.lng).toFixed(1)} km`,
-          phone:    place.formatted_phone_number || '',
+          phone:    place.formatted_phone_number || 'Emergency: 112',
           placeId:  place.place_id,
         }))
       }
     } catch (err) { console.error('Google Maps error:', err) }
   }
   return [
-    { name: 'City General Hospital',       address: `Near your location`, distance: '0.8 km', phone: '112' },
-    { name: 'Government District Hospital', address: 'District headquarters',   distance: '1.4 km', phone: '108' },
-    { name: 'Primary Health Center',        address: 'Community health center',  distance: '2.1 km', phone: '104' },
+    { name: 'City General Hospital',       address: `Near your location`, distance: '0.8 km', phone: 'Emergency: 112' },
+    { name: 'Government District Hospital', address: 'District headquarters',   distance: '1.4 km', phone: 'Emergency: 108' },
+    { name: 'Primary Health Center',        address: 'Community health center',  distance: '2.1 km', phone: 'Emergency: 104' },
   ]
 }
 
