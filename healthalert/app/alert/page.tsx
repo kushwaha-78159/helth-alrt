@@ -196,7 +196,7 @@ export default function AlertPage() {
                 <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium bg-white/50">
                   <span>⚠️ Severity:</span>
                   <span className={`font-bold ${aiResult.severity === 'HIGH' ? 'text-error-500' : aiResult.severity === 'MEDIUM' ? 'text-yellow-600' : 'text-green-600'}`}>
-                    {aiResult.severITY}
+                    {aiResult.severity}
                   </span>
                 </div>
               </div>
